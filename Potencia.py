@@ -18,7 +18,7 @@ class Potencia:
 
     def potencia(self):
         n = len(self.matriz)
-        vector = [random.uniform(0, 1) for _ in range(n)]
+        vector = [random.uniform(0, 1) for i in range(n)]
 
         autovalor_anterior = 0
         autovalor_convergencia = []
@@ -39,8 +39,6 @@ class Potencia:
         return autovalor_convergencia, autovector_convergencia
     
 matriz = [[random.randint(1,9) for j in range(2)] for i in range(2)]
-# POTENCIA SIMETRICA
-# matriz = [[(matriz[i][j] + matriz[j][i]) // 2 for j in range(2)] for i in range(2)]
 potencia = Potencia(matriz)
 autovalor_convergencia, autovector_convergencia = potencia.potencia()
 
@@ -55,7 +53,7 @@ plt.grid()
 
 plt.subplot(1, 2, 2)
 for i in range(len(autovector_convergencia[0])): 
-    plt.plot(range(1, len(autovector_convergencia) + 1), [autovector[i] for autovector in autovector_convergencia], marker='o', linestyle='-', label=f'Componente {i+1}')
+    plt.plot(range(1, len(autovector_convergencia) + 1), autovector_convergencia, marker='o', linestyle='-', label=f'Componente {i+1}')
 plt.xlabel("Iteraciones")
 plt.ylabel("Valor de la Componente")
 plt.title("Convergencia del Autovector")
