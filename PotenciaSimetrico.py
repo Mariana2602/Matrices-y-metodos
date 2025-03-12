@@ -18,30 +18,28 @@ class PotenciaSimetrico:
 
     def potencia(self):
         n = len(self.matriz)
-        vector = [random.uniform(0, 1) for _ in range(n)]
-        norma_vector = self.norma(vector)
-        vector = [v / norma_vector for v in vector] 
-        autovalores = []
-        autovectores = [] 
+        vector = [random.uniform(0, 1) for i in range(n)]
 
-        for _ in range(self.iteraciones):
+        autovalor_anterior = 0
+        autovalor_convergencia = []
+        autovector_convergencia = []
+
+        for i in range(self.iteraciones):
             nuevo_vector = self.matriz_vector(self.matriz, vector)
-            autovalor = sum(nuevo_vector[i] / vector[i] for i in range(n)) / n 
-            norma_nuevo = self.norma(nuevo_vector)
-            nuevo_vector = [v / norma_nuevo for v in nuevo_vector]  
-            autovalores.append(autovalor)
-            autovectores.append(nuevo_vector[:]) 
-
-            if self.norma([nuevo_vector[i] - vector[i] for i in range(n)]) < self.tolerancia:
+            norma = self.norma(nuevo_vector)
+            vector = [x / norma for x in nuevo_vector]
+            autovalor = sum(vector[i] * nuevo_vector[i] for i in range(n))
+            autovalor_convergencia.append(autovalor)
+            autovector_convergencia.append(list(vector))
+            if abs(autovalor - autovalor_anterior) < self.tolerancia:
                 break
 
-            vector = nuevo_vector
+            autovalor_anterior = autovalor
 
-        return autovalores, autovectores
+        return autovalor_convergencia, autovector_convergencia
 
 n = 2 
 matriz = [[random.randint(1, 9) for _ in range(n)] for _ in range(n)]
-matriz = [[(matriz[i][j] + matriz[j][i]) // 2 for j in range(n)] for i in range(n)] 
 potencia = PotenciaSimetrico(matriz)
 autovalores, autovectores = potencia.potencia()
 
@@ -56,7 +54,7 @@ plt.grid()
 
 plt.subplot(1, 2, 2)
 for i in range(n):  
-    plt.plot(range(1, len(autovectores) + 1), [vec[i] for vec in autovectores], marker='o', linestyle='-', label=f'Componente {i+1}')
+    plt.plot(range(1, len(autovectores) + 1), autovectores, marker='o', linestyle='-', label=f'Componente {i+1}')
 plt.xlabel("Iteraciones")
 plt.ylabel("Valor de la Componente")
 plt.title("Convergencia de las Componentes del Autovector")
