@@ -5,16 +5,14 @@ import matplotlib.pyplot as plt
 import random
 
 class MatrizCondicion:
-    
-    def __init__(self, filas, columnas):
-        self.filas = filas
-        self.columnas = columnas
-        self.matriz = [[random.randint(1,9) for j in range(self.columnas)]for i in range(self.filas)]
+    def __init__(self, matriz):
+        self.matriz = matriz
+        self.filas = len(matriz)
+        self.columnas = len(matriz[0])
 
     def inversa(self):
         matriz = [i[:] for i in self.matriz]
         identidad = [[1 if i == j else 0 for j in range(self.columnas)] for i in range(self.filas)]
-
         if self.filas != self.columnas:
             return None
 
@@ -22,7 +20,6 @@ class MatrizCondicion:
             pivote = matriz[i][i]
             if pivote == 0:
                 return None
-
             for j in range(self.columnas):
                 matriz[i][j] /= pivote
                 identidad[i][j] /= pivote
@@ -43,7 +40,6 @@ class MatrizCondicion:
         inversa = self.inversa()
         if inversa is None:
             return None
-
         normaMatriz = self.norma(self.matriz) 
         normaInversa = self.norma(inversa) 
 
@@ -57,8 +53,9 @@ tam = list(range(2, 11))
 condiciones = []
 
 for i in tam:
-    matriz = MatrizCondicion(i, i)
-    condicion = matriz.calcular_condicion()
+    matriz = [[random.randint(1, 9) for _ in range(i)] for _ in range(i)]
+    matriz_condicion = MatrizCondicion(matriz)
+    condicion = matriz_condicion.calcular_condicion()
     if condicion is not None:
         condiciones.append(condicion)
     else:
@@ -72,4 +69,3 @@ plt.title("Número de Condición en función del Tamaño de la Matriz")
 plt.legend()
 plt.grid()
 plt.show()
-
